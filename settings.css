@@ -1,0 +1,127 @@
+:root{
+  --bg:#0b1020;
+  --panel:#0f172a;
+  --glass: rgba(255,255,255,.06);
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --accent:#2563eb;
+  --danger:#ef4444;
+  --radius:16px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #102040 0%, transparent 60%) no-repeat,
+    radial-gradient(1000px 700px at 110% 0%, #0d1a36 0%, transparent 60%) no-repeat,
+    var(--bg);
+}
+
+/* Header */
+.wrap{max-width:1200px; margin:0 auto; padding:24px}
+.page-head{display:flex; align-items:end; justify-content:space-between; gap:16px; margin:8px 0 18px}
+.title{margin:0; font-weight:800; letter-spacing:.2px}
+.muted{color:var(--muted)}
+.version-chip{
+  background:linear-gradient(180deg, rgba(37,99,235,.15), rgba(37,99,235,.05));
+  border:1px solid rgba(37,99,235,.35);
+  color:#cfe1ff; padding:6px 12px; border-radius:999px; font-weight:700;
+}
+
+/* Grid */
+.grid{
+  display:grid; grid-template-columns: minmax(0, 1fr) 340px; gap:18px;
+}
+@media (max-width:992px){
+  .grid{grid-template-columns:1fr}
+}
+.col-main{}
+.col-side{}
+.side-stack{display:flex; flex-direction:column; gap:18px}
+.sticky{position:sticky; top:18px}
+
+/* Cards */
+.card{
+  /* Pretty glassy background */
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding:18px;
+
+  /* Lint-friendly fallback + blur */
+  background-color: rgba(15,23,42,0.45);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  /* Some linters want this on cards too */
+  /* backdrop-filter is supported in modern browsers; fallback is the bg-color above */
+}
+.card h3{margin:6px 2px 14px}
+
+/* Profile */
+.profile-head{display:flex; gap:16px; align-items:center; margin-bottom:12px}
+.avatar{
+  width:64px; height:64px; border-radius:18px; background:#1f2937;
+  font-weight:800; font-size:26px; color:#cde1ff;
+  border:1px solid rgba(255,255,255,.08); box-shadow: var(--shadow); overflow:hidden;
+
+  /* Grid center (modern) */
+  display:grid; place-items:center;
+
+  /* Flex fallback for fussier engines/linters */
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  align-items:center; justify-content:center;
+}
+.avatar img{width:100%; height:100%; object-fit:cover; display:block}
+.name{margin:0}
+.email{margin:2px 0 0 0; color:#cbd5e1; font-size:.95rem}
+.tags{margin-top:8px; display:flex; gap:8px; flex-wrap:wrap}
+.tag{
+  padding:4px 8px; border-radius:999px; font-size:.8rem; color:#cfe1ff;
+  background:linear-gradient(180deg, rgba(37,99,235,.20), rgba(37,99,235,.08));
+  border:1px solid rgba(37,99,235,.35);
+}
+
+/* Key-Value lists */
+.kv{display:grid; grid-template-columns:160px 1fr; gap:8px 18px; margin:0}
+.kv.narrow{grid-template-columns:120px 1fr}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+
+/* Buttons */
+.btn-row{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap}
+.btn{
+  /* appearance with vendor prefix to keep Safari and lint tools calm */
+  -webkit-appearance: none;
+  appearance: none;
+
+  cursor:pointer;
+  background:linear-gradient(180deg, rgba(37,99,235,.28), rgba(37,99,235,.16));
+  color:#dbe8ff; font-weight:700; padding:10px 14px; border-radius:12px;
+  border:1px solid rgba(37,99,235,.45);
+  transition: transform .06s ease, filter .2s ease;
+}
+.btn:hover{transform: translateY(-1px)}
+.btn:active{transform: translateY(0)}
+.btn.danger{
+  background:linear-gradient(180deg, rgba(239,68,68,.28), rgba(239,68,68,.16));
+  border-color: rgba(239,68,68,.45); color:#ffe4e6;
+}
+.btn.ghost{
+  background:transparent; border:1px solid rgba(203,213,225,.35); color:#cbd5e1; font-weight:600;
+}
+
+/* Chips/buttons inline */
+.chip{
+  margin-left:8px; padding:3px 8px; font-size:.8rem; border-radius:999px; cursor:pointer;
+  border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.06); color:#e5e7eb;
+}
+.chip:hover{filter:brightness(1.1)}

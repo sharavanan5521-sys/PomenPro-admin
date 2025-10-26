@@ -1,0 +1,33 @@
+<!-- assets/navbar.html -->
+<nav class="navbar navbar-expand-lg px-3 shadow-sm">
+  <a class="navbar-brand fw-bold d-flex align-items-center" href="dashboard.html">
+    <img src="assets/logo.png" alt="Logo" width="32" height="32" class="me-2">
+    <span>PomenPro Admin</span>
+  </a>
+
+  <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="jobs.html">Jobs</a></li>
+      <li class="nav-item"><a class="nav-link" href="technicians.html">Technicians</a></li>
+      <li class="nav-item"><a class="nav-link" href="performance.html">Performance</a></li>
+      <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+      <li class="nav-item"><a class="nav-link" href="settings.html">Settings</a></li>
+    </ul>
+
+    <div class="d-flex align-items-center gap-3">
+      <!-- User pill -->
+      <div id="userPill" class="user-pill">
+        <span class="dot"></span>
+        <span id="userName">admin</span>
+      </div>
+
+      <!-- Orange sign-out -->
+      <button id="signOutBtn" class="btn btn-orange btn-sm">Sign Out</button>
+    </div>
+  </div>
+</nav>

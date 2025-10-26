@@ -1,0 +1,229 @@
+/* PomenPro • Admin (Technicians) — Match Jobs Page Look */
+
+/* ===== Tokens ===== */
+:root{
+  --bg:#0b1020;
+  --panel:#0f172a;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+
+  --orange:#f97316;
+  --orange-2:#e96812;
+  --orange-3:#b45309;
+
+  --line: rgba(255,255,255,.08);
+  --line-2: rgba(255,255,255,.12);
+  --shadow: 0 18px 50px rgba(0,0,0,.55);
+  --radius:16px;
+  --radius-lg:18px;
+}
+
+/* ===== Background with orange wedges ===== */
+body.bg-body{
+  position:relative;
+  background:
+    radial-gradient(1200px 700px at -10% -10%, rgba(255,255,255,.04), transparent 60%),
+    radial-gradient(1100px 700px at 0% 100%, rgba(255,255,255,.035), transparent 60%),
+    var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+}
+body.bg-body::before,
+body.bg-body::after{
+  content:"";
+  position:fixed;
+  right:-12vw;
+  width:65vw;
+  height:65vh;
+  transform:rotate(-35deg);
+  pointer-events:none;
+  z-index:0;
+  background:linear-gradient(180deg,var(--orange)0%,var(--orange-2)100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;
+  opacity:.95;
+}
+body.bg-body::before{ top:-18vh; border-radius:24px; }
+body.bg-body::after{ bottom:-22vh; border-radius:24px; filter:brightness(.95); }
+
+/* IMPORTANT: let Bootstrap control modal stacking */
+#navbar-mount, main { position:relative; z-index:1; }
+
+/* ===== Navbar (Jobs-page style) ===== */
+.navbar{
+  position:sticky; top:0; z-index:10;
+  background:linear-gradient(180deg,#0b1020 0%,#0f172a 100%);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+
+/* Brand */
+.navbar .navbar-brand{
+  color:#ffffff !important;
+  font-weight:800;
+  letter-spacing:.3px;
+  display:flex; align-items:center; gap:.45rem;
+}
+.navbar .navbar-brand img{ width:30px; height:30px; object-fit:contain; display:block; }
+
+/* Links */
+.navbar .nav-link{
+  color:#cbd5e1 !important;
+  padding:.75rem .9rem;
+  font-weight:500;
+}
+.navbar .nav-link:hover,
+.navbar .nav-link:focus{ color:#fff !important; }
+.navbar .nav-link.active{
+  color:#fff !important; position:relative;
+}
+.navbar .nav-link.active::after{
+  content:""; position:absolute; left:.6rem; right:.6rem; bottom:-10px;
+  height:3px; border-radius:3px;
+  background:linear-gradient(90deg,var(--orange),#fb923c);
+}
+
+/* Username pill */
+.user-pill{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.35rem .7rem; border-radius:999px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);
+  color:#e5e7eb; font-weight:600;
+}
+.user-pill .status-dot, .user-pill .dot{
+  width:8px; height:8px; border-radius:50%;
+  background:#10b981; box-shadow:0 0 0 3px rgba(16,185,129,.18);
+}
+
+/* Sign Out button (match snippet id=signOutBtn) */
+#signOutBtn, .btn-signout{
+  background:var(--orange);
+  color:#0b0f1a !important;
+  font-weight:700;
+  border:none;
+  border-radius:14px;
+  padding:.45rem .9rem;
+  box-shadow:0 6px 18px rgba(249,115,22,.3);
+  transition:.2s;
+}
+#signOutBtn:hover, .btn-signout:hover{
+  background:#ff8a2a;
+  color:#0b0f1a !important;
+}
+
+/* Dropdowns */
+.dropdown-menu{ background:#0f172a; border-color:var(--line); color:var(--text); }
+.dropdown-item{ color:#e5e7eb; }
+.dropdown-item:hover{ background:rgba(249,115,22,.15); color:#fff; }
+
+/* ===== Page header ===== */
+main.container{ padding-top:28px; }
+h1.h3{
+  color:#ffffff; font-size:2rem; font-weight:800; letter-spacing:.25px;
+}
+
+/* ===== Card / Panel ===== */
+.card{
+  background:rgba(15,23,42,.96);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow);
+}
+.card-header{ background:transparent; border-color:var(--line); }
+
+/* ===== Toolbar ===== */
+#btnAdd{
+  border-radius:14px;
+  font-weight:600;
+  padding:.6rem 1rem;
+  background:var(--orange);
+  border:none; color:#0b0f1a;
+  box-shadow:0 8px 20px rgba(249,115,22,.25);
+}
+#btnAdd:hover{ background:#ff8a2a; }
+
+/* Search */
+.form-control{
+  background:rgba(255,255,255,.06);
+  border-color:var(--line-2);
+  color:var(--text);
+  border-radius:12px;
+  height:46px;
+}
+.form-control::placeholder{ color:#9ca3af; }
+.form-control:focus{
+  border-color:var(--orange);
+  box-shadow:0 0 0 .18rem rgba(249,115,22,.25);
+}
+
+/* ===== Table ===== */
+.table{ color:var(--text); margin:0; }
+.table thead th{
+  background:#121a2d; color:#e2e8f0;
+  border-bottom-color:rgba(255,255,255,.1);
+  font-weight:700;
+}
+.table tbody tr{ border-color:rgba(255,255,255,.06); }
+.table tbody tr:hover{ background:rgba(255,255,255,.03); }
+.table .text-muted{ color:var(--muted)!important; }
+
+/* Role label yellow for "Technician" */
+.role-pill{
+  background:rgba(251,191,36,.15);
+  color:#fbbf24;
+  border:1px solid rgba(251,191,36,.35);
+  padding:.15rem .5rem;
+  border-radius:999px;
+  font-size:.8rem; font-weight:600;
+}
+
+/* Row action buttons */
+.btn-row{
+  border-radius:10px;
+  border-color:rgba(255,255,255,.22);
+  color:#e5e7eb;
+  background:rgba(255,255,255,.06);
+}
+.btn-row:hover{
+  background:var(--orange);
+  border-color:var(--orange);
+  color:#0b0f1a;
+}
+.btn-outline-danger{
+  color:#ef4444;
+  border-color:rgba(239,68,68,.5);
+  border-radius:10px;
+}
+.btn-outline-danger:hover{
+  background:rgba(239,68,68,.16);
+  color:#fff;
+}
+
+/* ===== Modal ===== */
+.modal-content{
+  background:rgba(15,23,42,.98);
+  border:1px solid var(--line);
+  border-radius:16px;
+  color:var(--text);
+}
+
+/* Scrollbar */
+*::-webkit-scrollbar{ height:10px; width:10px; }
+*::-webkit-scrollbar-track{ background:rgba(255,255,255,.03); }
+*::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.12);
+  border:2px solid rgba(0,0,0,.2);
+  border-radius:999px;
+}
+*::-webkit-scrollbar-thumb:hover{ background:rgba(255,255,255,.18); }
+
+/* Responsive */
+@media (max-width:991.98px){
+  .table-responsive{ border:1px solid var(--line); border-radius:14px; }
+}
+
+/* === Header title tweak for Technicians page === */
+h1.h3 {
+  color: var(--orange);
+  text-shadow: 0 2px 8px rgba(249,115,22,.25);
+}

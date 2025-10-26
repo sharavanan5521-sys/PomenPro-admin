@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PomenProTMS • Technician Performance</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Inter to keep things clean -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Page Styles -->
+  <link rel="stylesheet" href="performance.css" />
+  <style>
+    body, h1, h2, h3, h4, p, select, button {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif !important;
+    }
+    h1 { font-weight: 700; font-size: 2rem; }
+    nav.navbar { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div id="navbar"></div>
+
+  <div class="wrap">
+    <header class="topbar">
+      <h1>Technician Performance</h1>
+      <div class="tech-picker">
+        <label for="techSelect">Technician</label>
+        <select id="techSelect" class="select">
+          <option value="" disabled selected>Loading technicians…</option>
+        </select>
+      </div>
+    </header>
+
+    <section id="techInfo" class="tech-info hidden">
+      <div class="card idcard">
+        <div class="id-main">
+          <h2 id="tName">—</h2>
+          <p id="tEmail">—</p>
+          <p id="tPhone">—</p>
+          <p id="tAddress" class="muted">—</p>
+        </div>
+        <div class="id-side">
+          <!-- Keep Bootstrap badges if you really want, but my CSS overrides them inside .id-side -->
+          <span class="badge" id="tRole">technician</span>
+          <span class="badge alt" id="tUid">—</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card metric">
+          <h3>Efficiency</h3>
+          <div class="value" id="mEfficiency">—</div>
+          <div class="sub">actual / available minutes</div>
+        </div>
+        <div class="card metric">
+          <h3>Productivity</h3>
+          <div class="value" id="mProductivity">—</div>
+          <div class="sub">billed / actual minutes</div>
+        </div>
+        <div class="card metric">
+          <h3>Proficiency</h3>
+          <div class="value" id="mProficiency">—</div>
+          <div class="sub">job quality consistency</div>
+        </div>
+        <div class="card metric">
+          <h3>Avg Rating</h3>
+          <div class="value" id="mRating">—</div>
+          <div class="sub">customer feedback</div>
+        </div>
+        <div class="card metric">
+          <h3>Jobs Completed</h3>
+          <div class="value" id="mJobs">—</div>
+          <div class="sub">latest day snapshot</div>
+        </div>
+        <div class="card metric">
+          <h3>Time</h3>
+          <div class="value" id="mTime">—</div>
+          <div class="sub">actual / available / billed</div>
+        </div>
+      </div>
+
+      <div class="card advice">
+        <div class="advice-left">
+          <h3>Training Recommendation</h3>
+          <p id="recText" class="muted">Waiting for data…</p>
+          <ul id="recReasons"></ul>
+        </div>
+        <div class="advice-right">
+          <button id="btnSendTraining" class="btn" disabled>Send Training</button>
+          <div id="trainStatus" class="muted tiny"></div>
+        </div>
+      </div>
+
+      <div class="card raw">
+        <h3 class="title">Raw Stats (fallback)</h3>
+        <pre id="rawStats">{}</pre>
+      </div>
+    </section>
+  </div>
+
+  <!-- Firebase app bootstrap -->
+  <script type="module" src="js/firebase.js"></script>
+  <!-- Page logic (we’ll fix name + signout when you hand me this file) -->
+  <script type="module" src="performance.js"></script>
+
+  <!-- Load Navbar dynamically and mark the active link -->
+  <script>
+    fetch("assets/navbar.html")
+      .then(r => r.text())
+      .then(html => {
+        const el = document.getElementById("navbar");
+        el.innerHTML = html;
+
+        // Mark "Performance" as active after injection
+        const link = el.querySelector('a.nav-link[href="performance.html"]');
+        if (link) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
+      })
+      .catch(err => console.error("Navbar failed to load:", err));
+  </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PomenPro Admin · Create Job</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="wrap">
+  <main style="width:100%;max-width:1020px;padding:0 8px;">
+    <div class="card" style="max-width:560px;margin:0 auto;padding:22px 22px 18px;">
+      <header style="margin-bottom:10px">
+        <h1 style="margin:0 0 4px;font-size:clamp(1.4rem,2.2vw,1.9rem);letter-spacing:.3px;">
+          Create New Job
+        </h1>
+        <p class="muted" style="margin:0;font-size:.95rem">Fill the details below, then hit Create Job.</p>
+      </header>
+
+      <!-- inline helper so selects match your theme without touching global CSS -->
+      <style>
+        .ff-select, .ff-textarea{
+          width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);
+          background:#0b1020;color:var(--text);outline:none;
+        }
+        .ff-select:focus, .ff-textarea:focus{
+          border-color:var(--orange);
+          box-shadow:0 0 0 3px rgba(249,115,22,.22);
+        }
+      </style>
+
+      <form id="jobForm" novalidate>
+        <!-- Vehicle Number -->
+        <label for="vehicleNo">Vehicle Number</label>
+        <input type="text" id="vehicleNo" name="vehicleNo" placeholder="ABC1234"
+               autocomplete="off" required
+               pattern="[A-Za-z0-9\- ]{3,12}" title="3–12 letters or numbers">
+
+        <!-- Service Type -->
+        <label for="serviceType">Service Type</label>
+        <input type="text" id="serviceType" name="serviceType" placeholder="Oil Change" required>
+
+        <!-- Assign To -->
+        <label for="assignedTo">Assign To</label>
+        <select id="assignedTo" name="assignedTo" class="ff-select" required>
+          <option value="auto" selected>Auto assign a technician</option>
+          <!-- real technicians will be injected here -->
+        </select>
+
+        <!-- Suggested Timing -->
+        <label for="estimatedDuration">Suggested Timing</label>
+        <select id="estimatedDuration" name="estimatedDuration" class="ff-select">
+          <option value="">— Select a duration —</option>
+          <option value="auto">Suggest based on service type</option>
+          <option value="15">15 mins</option>
+          <option value="30">30 mins</option>
+          <option value="45">45 mins</option>
+          <option value="60">1 hour</option>
+          <option value="90">1 hour 30 mins</option>
+          <option value="120">2 hours</option>
+        </select>
+
+        <!-- Notes -->
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" rows="4" class="ff-textarea"
+                  placeholder="Customer requested fully synthetic oil"></textarea>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:10px;align-items:center;margin-top:14px;">
+          <button type="submit" id="btnSubmit" class="btn">Create Job</button>
+          <button type="button" id="btnBack" class="btn btn-outline">← Back to Dashboard</button>
+        </div>
+
+        <!-- Message box (for JS to toggle) -->
+        <p id="msgBox" class="error hidden" role="alert" aria-live="polite" style="margin-top:12px;"></p>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="js/create-job.js"></script>
+</body>
+</html>

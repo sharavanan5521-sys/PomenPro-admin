@@ -1,0 +1,296 @@
+/* ===== PomenPro • Performance page (Revised color contrast + readable palette) ===== */
+
+/* ---------- Tokens ---------- */
+:root{
+  /* Brand palette tuned for better contrast */
+  --navy-950:#090e1b;
+  --navy-900:#0c1428;
+  --navy-850:#0f1a33;
+  --navy-800:#15213c;
+  --slate-600:#334155;
+
+  --orange:#f97316;
+  --orange-2:#fb923c;
+  --orange-3:#b45309;
+
+  --text:#f1f5f9;         /* brighter text */
+  --muted:#a8b3c6;        /* lighter muted text */
+
+  --accent:#3b82f6;
+  --accent-2:#60a5fa;
+
+  --danger:#ef4444;
+  --good:#22c55e;
+  --warn:#eab308;
+  --ring:#3b82f6;
+
+  --glass:rgba(255,255,255,.08);
+  --glass-2:rgba(255,255,255,.15);
+
+  --radius:14px;
+  --shadow:0 14px 36px rgba(0,0,0,.45);
+}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:"Poppins", ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  color:var(--text);
+  /* Refined background: visible diagonal navy layering + orange wedge */
+  background:
+    linear-gradient(135deg, transparent 67%, rgba(249,115,22,.18) 67.5%, rgba(249,115,22,.14) 77%, transparent 77.3%) no-repeat,
+    linear-gradient(135deg, #1f273a 0%, #1f273a 24%, transparent 24.2%) no-repeat,
+    linear-gradient(135deg, #111a2f 0%, #111a2f 14%, transparent 14.2%) no-repeat,
+    linear-gradient(180deg, var(--navy-850), var(--navy-900));
+  background-size:100% 100%;
+}
+
+.wrap{max-width:1150px; margin:32px auto 90px; padding:0 16px}
+
+/* ---------- NAVBAR ---------- */
+.navbar{
+  background: linear-gradient(180deg, #111a2f, #0d1526);
+  border-bottom:1px solid var(--glass-2);
+  padding-block:.6rem;
+  box-shadow:0 3px 12px rgba(0,0,0,.35);
+}
+.navbar .navbar-brand{
+  display:flex; align-items:center; gap:.5rem;
+  color:#fff; font-weight:900; font-size:1.05rem; letter-spacing:.3px;
+}
+.navbar .navbar-brand img{
+  width:30px; height:30px; object-fit:contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+}
+.navbar .nav-link{
+  position:relative; color:#cfd8e3 !important;
+  padding:.6rem .95rem !important; transition:color .15s ease, background-color .15s ease;
+  border-radius:8px;
+}
+.navbar .nav-link:hover{color:#fff !important; background:rgba(255,255,255,.08);}
+.navbar .nav-link.active::after,
+.navbar .nav-link[aria-current="page"]::after{
+  content:""; position:absolute; left:12px; right:12px; bottom:-8px; height:4px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--orange),var(--orange-2));
+  box-shadow:0 2px 10px rgba(249,115,22,.45);
+}
+
+/* ---------- User + Buttons ---------- */
+.user-pill{
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  padding:7px 11px; border-radius:999px; font-weight:700;
+}
+.user-pill .dot{
+  width:8px; height:8px; border-radius:50%;
+  background:#22c55e; box-shadow:0 0 0 3px rgba(34,197,94,.25);
+}
+
+.btn-orange{
+  background:linear-gradient(180deg,var(--orange),var(--orange-3));
+  color:#fff; border:1px solid rgba(249,115,22,.4);
+  padding:.55rem 1rem; border-radius:12px; font-weight:800;
+  transition:filter .2s ease;
+}
+.btn-orange:hover{filter:brightness(1.1);}
+.btn-orange:active{transform:translateY(1px);}
+
+/* ---------- Cards ---------- */
+.card{
+  background:linear-gradient(180deg,#16213f,#0f172a);
+  border:1px solid var(--glass);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:16px 18px;
+}
+.title{margin:0 0 8px;color:#dce4f5;font-size:1rem;font-weight:700}
+
+/* ---------- Metrics Grid ---------- */
+.grid{
+  margin-top:16px; display:grid; gap:14px;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+}
+.metric{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px; padding:14px;
+  transition:background .2s ease, transform .15s ease;
+}
+.metric:hover{background:rgba(255,255,255,.1); transform:translateY(-2px);}
+.metric h3{margin:0 0 10px;font-size:.95rem;color:#e2e8f0;}
+.value{font-size:1.9rem;font-weight:900;line-height:1.1;}
+.sub{color:var(--muted);font-size:.85rem;}
+.value[data-state="good"]{color:var(--good);}
+.value[data-state="warn"]{color:var(--warn);}
+.value[data-state="bad"]{color:var(--danger);}
+
+/* ---------- Advice Section ---------- */
+.advice{
+  margin-top:18px;display:flex;justify-content:space-between;gap:14px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--radius);padding:18px;
+}
+.advice-left h3{margin:0 0 6px;color:var(--text);}
+#recReasons li{margin:4px 0;}
+.advice-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+
+.btn{
+  padding:12px 14px;border-radius:12px;
+  border:1px solid rgba(37,99,235,.35);
+  background:linear-gradient(180deg,var(--accent),var(--accent-2));
+  color:#fff;font-weight:700;cursor:pointer;min-width:180px;
+}
+.btn:hover{filter:brightness(1.08);}
+.btn:disabled{opacity:.55;cursor:not-allowed;filter:grayscale(40%);}
+.btn:active{transform:translateY(1px);}
+
+/* ---------- Raw Stats ---------- */
+.raw pre{
+  margin:0;background:rgba(255,255,255,.05);
+  padding:12px;border-radius:10px;
+  border:1px dashed rgba(148,163,184,.3);
+  color:#cbd5e1;overflow:auto;max-height:220px;
+}
+
+/* ---------- Table ---------- */
+.table{
+  width:100%;border-collapse:separate;border-spacing:0;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;overflow:hidden;
+}
+.table th,.table td{
+  padding:14px 16px;text-align:left;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color:#e2e8f0;
+}
+.table th{font-weight:700;background:rgba(255,255,255,.06);}
+.table tr:hover td{background:rgba(255,255,255,.08);}
+/* ===== Font visibility enhancement (keep all design intact) ===== */
+body,
+.card,
+.metric,
+.advice,
+.table,
+.navbar,
+.id-main,
+.topbar,
+.wrap {
+  color: #ffffff; /* brighter text overall */
+}
+
+/* Headings and key titles */
+h1, h2, h3,
+.title,
+.metric h3,
+.advice-left h3,
+.topbar h1,
+.id-main h2 {
+  color: #ffffff;
+  font-weight: 800;
+}
+
+/* Subtext / muted parts */
+.sub,
+.muted,
+.tech-picker label,
+#recReasons,
+.id-main p,
+.table td,
+.table th {
+  color: #cbd5e1;
+}
+
+/* Inputs & dropdowns */
+.select, select, option, input {
+  color: #f8fafc;
+}
+
+/* Metric values */
+.value {
+  color: #ffffff;
+  font-weight: 900;
+}
+
+/* Special KPI colours */
+.value[data-state="good"] { color: #22c55e; }
+.value[data-state="warn"] { color: #facc15; }
+.value[data-state="bad"]  { color: #ef4444; }
+
+/* Buttons */
+.btn, .btn-orange {
+  color: #ffffff;
+}
+
+/* Raw JSON area */
+.raw pre {
+  color: #e2e8f0;
+}
+/* ===== Dropdown (Technician selector) colour enhancement ===== */
+
+/* Dropdown field itself */
+select,
+.select {
+  background-color: #0f172a !important; /* same deep navy tone */
+  color: #ffffff !important;             /* readable text */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 600;
+  appearance: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* When focused or hovered */
+select:focus,
+.select:focus,
+select:hover,
+.select:hover {
+  background-color: #16213f !important; /* slightly lighter navy */
+  border-color: var(--orange) !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.25);
+}
+
+/* The options inside the dropdown */
+select option {
+  background-color: #0f172a;  /* dark navy backdrop */
+  color: #f1f5f9;             /* visible text */
+  font-weight: 500;
+}
+
+/* Option hover (desktop only, for supporting browsers) */
+select option:checked,
+select option:hover {
+  background-color: var(--orange) !important;
+  color: #ffffff !important;
+}
+/* ===== Sign-Out button → Orange accent ===== */
+
+.navbar .btn-signout,
+button#btnSignOut,
+.btn-signout {
+  background: linear-gradient(180deg, var(--orange), var(--orange-3)) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(249, 115, 22, 0.35) !important;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: filter 0.2s ease, transform 0.15s ease;
+}
+
+.navbar .btn-signout:hover,
+button#btnSignOut:hover,
+.btn-signout:hover {
+  filter: brightness(1.08);
+}
+
+.navbar .btn-signout:active,
+button#btnSignOut:active,
+.btn-signout:active {
+  transform: translateY(1px);
+}
