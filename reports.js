@@ -1,22 +1,96 @@
-// reports.js — robust tech loader + reports
+// reports.js — robust tech loader + reports + navbar auth wiring
 import { getApps, getApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-import {
-  getDatabase, ref, get, query, orderByChild, equalTo
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { getDatabase, ref, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
 
-// Mount navbar.html
+// ---------- App/SDK ----------
+// firebase.js should have initialized the default app already.
+// Use default instances to avoid passing a null app.
+const app = getApps().length ? getApp() : undefined;
+const auth = getAuth();          // use default
+const db   = getDatabase();      // use default
+
+// ---------- Navbar mount + auth bindings ----------
 (async function mountNavbar(){
   try{
     const wrap = document.getElementById("navbarMount");
-    const html = await (await fetch("assets/navbar.html", {cache:"no-store"})).text();
-    wrap.innerHTML = html.replaceAll("AURA","PomenPro");
-  }catch(e){ console.warn("Navbar failed to load:", e); }
+    const html = await (await fetch("assets/navbar.html", { cache: "no-store" })).text();
+    wrap.innerHTML = html.replaceAll("AURA", "PomenPro");
+    wireNavbarAuth();
+  }catch(e){
+    console.warn("Navbar failed to load:", e);
+  }
 })();
 
-const app = getApps().length ? getApp() : null;
-const db  = getDatabase(app);
+// Support both your possible ID sets without touching the navbar file
+function getWhoAmIEl(){
+  return document.getElementById("whoami") || document.getElementById("userName");
+}
+function getSignOutBtn(){
+  return document.getElementById("btnSignOut") || document.getElementById("signOutBtn");
+}
 
-// DOM
+function setWhoAmI(text){
+  const el = getWhoAmIEl();
+  if (el) el.textContent = text || "";
+}
+
+function wireSignOut(){
+  const btn = getSignOutBtn();
+  if (btn && !btn.__wired){
+    btn.addEventListener("click", async () => {
+      try { await signOut(auth); } catch(_) {}
+      window.location.href = "index.html";
+    });
+    btn.__wired = true;
+  }
+}
+
+async function fetchAdminName(uid){
+  // Try RTDB lower-case path
+  try{
+    const s1 = await get(ref(db, `users/${uid}`));
+    if (s1.exists()){
+      const v = s1.val();
+      if (v?.name) return v.name;
+      if (v?.email) return v.email.split("@")[0];
+    }
+  }catch{}
+
+  // Fallback: RTDB upper-case path
+  try{
+    const s2 = await get(ref(db, `Users/${uid}`));
+    if (s2.exists()){
+      const v = s2.val();
+      if (v?.name) return v.name;
+      if (v?.email) return v.email.split("@")[0];
+    }
+  }catch{}
+
+  // Last resort: auth profile
+  const u = auth.currentUser;
+  if (u?.displayName) return u.displayName;
+  if (u?.email) return u.email.split("@")[0];
+  return "Admin";
+}
+
+function wireNavbarAuth(){
+  wireSignOut();
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user){
+      window.location.href = "index.html";
+      return;
+    }
+    const name = await fetchAdminName(user.uid);
+    setWhoAmI(name);
+
+    // In case navbar was still rendering, try once more shortly after.
+    setTimeout(() => setWhoAmI(name), 150);
+  });
+}
+
+// ---------- Helpers ----------
 const techSelect   = document.getElementById("techSelect");
 const dateFrom     = document.getElementById("dateFrom");
 const dateTo       = document.getElementById("dateTo");
@@ -26,11 +100,11 @@ const btnClear     = document.getElementById("btnClear");
 const btnCSV       = document.getElementById("btnCSV");
 const btnPrint     = document.getElementById("btnPrint");
 
-const kpiTotal     = document.getElementById("kpiTotal");
-const kpiCompleted = document.getElementById("kpiCompleted");
-const kpiPending   = document.getElementById("kpiPending");
-const kpiAvgTime   = document.getElementById("kpiAvgTime");
-const kpiEfficiency= document.getElementById("kpiEfficiency");
+const kpiTotal      = document.getElementById("kpiTotal");
+const kpiCompleted  = document.getElementById("kpiCompleted");
+const kpiPending    = document.getElementById("kpiPending");
+const kpiAvgTime    = document.getElementById("kpiAvgTime");
+const kpiEfficiency = document.getElementById("kpiEfficiency");
 
 const snapName     = document.getElementById("snapName");
 const snapJobs     = document.getElementById("snapJobs");
@@ -38,12 +112,11 @@ const snapAvg      = document.getElementById("snapAvg");
 const snapRating   = document.getElementById("snapRating");
 const snapTraining = document.getElementById("snapTraining");
 
-const tbody        = document.querySelector("#reportTable tbody");
-const chartCanvas  = document.getElementById("statusChart");
+const tbody       = document.querySelector("#reportTable tbody");
+const chartCanvas = document.getElementById("statusChart");
 
 let statusChart;
 
-// Helpers
 const toDate = v => typeof v === "number" ? new Date(v) : (v ? new Date(v) : null);
 const fmt    = d => d ? new Date(d).toLocaleString() : "—";
 const fmtDur = ms => {
@@ -64,16 +137,14 @@ function disableUI(flag){
   [techSelect, dateFrom, dateTo, statusSelect, btnGenerate, btnClear, btnCSV, btnPrint].forEach(el=> el.disabled = !!flag);
 }
 
-// ---- Technician loader (fixed) ----
+// ---------- Technician loader ----------
 async function loadFromUsersNode(nodeName){
-  // Try indexed query first
   try{
     const q = query(ref(db, nodeName), orderByChild("role"), equalTo("technician"));
     const snap = await get(q);
     if (snap.exists()) return snap.val();
-  }catch(e){ /* ignore, we’ll fall back */ }
+  }catch(e){}
 
-  // Fallback: read all and filter locally (case-insensitive)
   try{
     const snap = await get(ref(db, nodeName));
     if (!snap.exists()) return {};
@@ -93,14 +164,12 @@ async function loadFromUsersNode(nodeName){
 async function loadTechnicians(){
   techSelect.disabled = true;
   try{
-    // Pull techs from users + Users
     const [lower, upper, roleMapSnap] = await Promise.all([
       loadFromUsersNode("users"),
       loadFromUsersNode("Users"),
       get(ref(db, "userRoles")).catch(()=>null)
     ]);
 
-    // Merge userRoles = technician
     const roleTechs = new Set();
     if (roleMapSnap && roleMapSnap.exists()){
       const roles = roleMapSnap.val();
@@ -109,7 +178,6 @@ async function loadTechnicians(){
       });
     }
 
-    // Build unified map
     const merged = new Map();
     function take(uid, u){
       if (!u) u = {};
@@ -120,14 +188,12 @@ async function loadTechnicians(){
     Object.entries(lower||{}).forEach(([uid,u])=> take(uid,u));
     Object.entries(upper||{}).forEach(([uid,u])=> take(uid,u));
     roleTechs.forEach(uid=>{
-      if (!merged.has(uid)) take(uid, null); // will display uid/email later if we fetch
+      if (!merged.has(uid)) take(uid, null);
     });
 
-    // If we only got role uids without details, try fetch each once
     const missing = Array.from(merged.values()).filter(t => !t.name || t.name === t.uid);
     if (missing.length){
       await Promise.all(missing.map(async t=>{
-        // prefer lowercase path, then uppercase
         const s1 = await get(ref(db, `users/${t.uid}`)).catch(()=>null);
         const s2 = (!s1 || !s1.exists()) ? await get(ref(db, `Users/${t.uid}`)).catch(()=>null) : null;
         const v = (s1 && s1.exists()) ? s1.val() : (s2 && s2.exists() ? s2.val() : null);
@@ -138,8 +204,6 @@ async function loadTechnicians(){
       }));
     }
 
-    // Render
-    // Keep the "All technicians" option
     const currentAll = techSelect.querySelector('option[value="__all__"]');
     techSelect.innerHTML = "";
     techSelect.appendChild(currentAll || (()=>{ const op=document.createElement("option"); op.value="__all__"; op.textContent="All technicians"; return op;})());
@@ -166,14 +230,14 @@ async function loadTechnicians(){
   }
 }
 
-// ---- Reporting core (unchanged, aside from using new loader) ----
+// ---------- Reporting core ----------
 async function generateReport(){
   disableUI(true);
 
   const techId = techSelect.value;
   const fromMs = clampDate(dateFrom.value);
   const toMs   = clampDate(dateTo.value, true);
-  const statusFilter = statusSelect.value;
+  const statusFilterVal = statusSelect.value;
 
   try{
     const jobsSnap = await get(ref(db, "Jobs"));
@@ -188,7 +252,7 @@ async function generateReport(){
       const status     = (job?.status || "created").toLowerCase();
 
       if (techId !== "__all__" && assignedTo !== techId) continue;
-      if (statusFilter !== "__any__" && status !== statusFilter) continue;
+      if (statusFilterVal !== "__any__" && status !== statusFilterVal) continue;
 
       const createdMs = toDate(createdAt)?.getTime() ?? null;
       if (fromMs && createdMs && createdMs < fromMs) continue;
@@ -281,7 +345,6 @@ async function renderTechSnapshot(techId, rowsForTech, avgMs){
     return Math.round(comp.reduce((s,r)=>s+r.duration,0)/comp.length);
   })();
 
-  // optional extras
   let rating = "—";
   let training = "—";
   try{
@@ -319,7 +382,7 @@ function drawStatusChart(map){
   });
 }
 
-// Export CSV
+// ---------- Export CSV / Clear / Print ----------
 function exportCSV(){
   const rows = [];
   const heads = Array.from(document.querySelectorAll("#reportTable thead th")).map(th=>th.textContent.trim());
@@ -359,9 +422,8 @@ btnClear.addEventListener("click", ()=>{
 btnCSV.addEventListener("click", exportCSV);
 btnPrint.addEventListener("click", ()=> window.print());
 
-// Boot
+// ---------- Boot ----------
 (async function boot(){
-  // Prefill current month
   const now = new Date();
   const first = new Date(now.getFullYear(), now.getMonth(), 1);
   const last  = new Date(now.getFullYear(), now.getMonth()+1, 0);
