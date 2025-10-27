@@ -26,7 +26,6 @@ btnBack.addEventListener("click", () => window.location.href = "dashboard.html")
 
 // load technicians into the select
 async function populateTechnicians() {
-  // users/{uid} -> { email, name, role, ... }
   const techQ = query(ref(db, "users"), orderByChild("role"), equalTo("technician"));
   const snap = await get(techQ);
   if (!snap.exists()) return;
@@ -41,7 +40,7 @@ async function populateTechnicians() {
   for (const t of options) {
     const opt = document.createElement("option");
     opt.value = t.uid;
-    opt.textContent = `${t.name} (${t.uid.slice(0,6)}…)`;
+    opt.textContent = `${t.name} (${t.uid.slice(0, 6)}…)`;
     selAssignedTo.appendChild(opt);
   }
 }
@@ -58,12 +57,13 @@ function suggestDurationByService(type) {
     "battery replacement": 30,
     "engine check": 90
   };
-  return map[t] || 60; // polite default when we have no clue
+  return map[t] || 60;
 }
 
+// handle form submission
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  msgBox.hidden = true;
+  msgBox.style.display = "none"; // hide any old messages
   btnSubmit.disabled = true;
 
   try {
@@ -74,12 +74,13 @@ form.addEventListener("submit", async (e) => {
     const serviceType = document.getElementById("serviceType").value.trim();
     const notes = document.getElementById("notes").value.trim();
 
-    // NEW: read suggested timing
     const durRaw = selDuration?.value || "";
-    let estimatedDurationMinutes =
-      durRaw === "auto" ? suggestDurationByService(serviceType)
-      : durRaw ? Number(durRaw)
-      : null;
+    const estimatedDurationMinutes =
+      durRaw === "auto"
+        ? suggestDurationByService(serviceType)
+        : durRaw
+        ? Number(durRaw)
+        : null;
 
     const payload = {
       vehicleNo,
@@ -87,19 +88,16 @@ form.addEventListener("submit", async (e) => {
       assignedTo: assignedUid,
       notes,
       status: "pending",
-      createdAt: serverTimestamp(),      // server time placeholder
+      createdAt: serverTimestamp(),
       createdBy: auth.currentUser.uid,
       displayId: "JOB-" + Date.now(),
-      // NEW fields:
-      estimatedDurationMinutes,          // integer minutes or null
-      estimatedSource:
-        durRaw === "auto" ? "auto" : (durRaw ? "manual" : null)
+      estimatedDurationMinutes,
+      estimatedSource: durRaw === "auto" ? "auto" : durRaw ? "manual" : null,
     };
 
-    const newJobRef = push(ref(db, "Jobs"));
-    await set(newJobRef, payload);
+    await set(push(ref(db, "Jobs")), payload);
 
-    ok("✅ Job created.");
+    ok("✅ Job created successfully.");
     form.reset();
     selAssignedTo.value = "auto";
     selDuration.value = "";
@@ -150,12 +148,15 @@ async function resolveAssignee() {
 // ui helpers
 function ok(text) {
   msgBox.textContent = text;
-  msgBox.hidden = false;
-  msgBox.style.color = "#10b981";
+  msgBox.style.display = "block";
+  msgBox.style.color = "#10b981"; // green
+  msgBox.classList.remove("hidden");
 }
+
 function fail(err) {
   console.error(err);
   msgBox.textContent = `❌ Failed to create job: ${err?.code || err?.message || err}`;
-  msgBox.hidden = false;
-  msgBox.style.color = "#ef4444";
+  msgBox.style.display = "block";
+  msgBox.style.color = "#ef4444"; // red
+  msgBox.classList.remove("hidden");
 }
