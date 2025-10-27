@@ -1,0 +1,405 @@
+/* assets/styles.css  — PomenPro dark + orange theme */
+
+:root{
+  /* Brand palette (from your splash) */
+  --black:#000000;
+  --bg:#0b1220;           /* deep navy */
+  --bg-2:#0f172a;         /* slate-navy */
+  --band-1:#2f3846;       /* top slate band */
+  --band-2:#111826;       /* mid dark band */
+  --orange:#f97316;       /* primary accent */
+  --orange-2:#b45309;     /* darker orange */
+  --orange-3:#fb923c;     /* lighter orange */
+
+  /* UI neutrals */
+  --card:#0f1624;
+  --border:#1f2937;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+
+  /* Status colors */
+  --ok:#10b981;
+  --warn:#f59e0b;
+  --danger:#ef4444;
+
+  /* Effects */
+  --shadow: 0 12px 36px rgba(0,0,0,.45);
+  --radius: 12px;
+}
+
+/* ----- Base ----- */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+
+  /* Diagonal background echoing the app splash */
+  background:
+    linear-gradient(130deg, transparent 0 48%, var(--black) 48% 52%, transparent 52%) no-repeat,
+    linear-gradient(130deg, var(--band-1) 0 24%, transparent 24% 26%, var(--band-2) 26% 50%, transparent 50%) no-repeat,
+    radial-gradient(1200px 600px at 20% 10%, #0a1427, var(--bg));
+  background-color: var(--bg-2);
+}
+
+a{color:inherit;text-decoration:none}
+.muted{color:var(--muted)}
+
+/* ----- Layout wrappers ----- */
+.wrap{min-height:100vh;display:grid;place-items:center;padding:24px}
+main{max-width:1100px;margin:18px auto;padding:0 8px}
+
+/* ----- Cards / Panels ----- */
+.card,
+.tile,
+.panel{
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)) , var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+.tile{padding:16px;position:relative;overflow:hidden}
+.tile::before{
+  /* subtle orange accent stripe on the side */
+  content:"";
+  position:absolute;inset:auto 0 0 auto;
+  width:4px;height:40%;
+  background:linear-gradient(180deg,var(--orange),var(--orange-2));
+  border-radius:2px 0 0 2px;
+  opacity:.65;
+}
+.tile:hover{box-shadow:0 16px 42px rgba(0,0,0,.55)}
+.kpi{font-size:32px;font-weight:800;margin-top:6px;letter-spacing:.5px}
+
+.panel{margin-top:18px;padding:16px}
+
+/* ----- Grid ----- */
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.grid{grid-template-columns:1fr}}
+
+/* ----- Buttons ----- */
+button,
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:.5rem;
+  border:none;border-radius:10px;
+  padding:12px 14px;font-weight:700;cursor:pointer;
+  background:linear-gradient(180deg,var(--orange-3),var(--orange));
+  color:#111; text-shadow:0 1px 0 rgba(255,255,255,.2);
+  box-shadow:0 8px 20px rgba(249,115,22,.25), inset 0 0 0 1px rgba(0,0,0,.15);
+}
+button:hover,.btn:hover{filter:saturate(1.15) brightness(1.05)}
+button:active,.btn:active{transform:translateY(1px)}
+button[disabled]{opacity:.6;cursor:not-allowed}
+
+/* A quieter secondary button if you need it */
+.btn-outline{
+  background:transparent;color:var(--text);
+  border:1px solid var(--border);
+}
+.btn-outline:hover{border-color:var(--orange);color:var(--orange-3)}
+
+/* ----- Forms (global defaults) ----- */
+label{display:block;font-size:14px;margin:12px 0 6px}
+input{
+  width:100%;padding:12px 14px;border-radius:10px;
+  border:1px solid var(--border);background:#0b1020;color:var(--text);outline:none;
+}
+input:focus{
+  border-color:var(--orange);
+  box-shadow:0 0 0 3px rgba(249,115,22,.22);
+}
+
+/* errors */
+.error{
+  margin-top:10px;padding:10px;border-radius:10px;
+  background:#2b0f12;color:#fecaca;border:1px solid #7f1d1d;
+}
+
+/* ----- Navbar bits (from assets/navbar.html) ----- */
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  background:var(--card);border-bottom:1px solid var(--border);
+  padding:12px 16px;border-radius:12px;
+}
+.navbar-brand img{border-radius:50%;object-fit:cover}
+.nav-link{opacity:.85}
+.nav-link:hover{opacity:1}
+.nav-link.active{
+  font-weight:700;
+  border-bottom:2px solid var(--orange);
+  color:var(--text);
+}
+
+/* identity pill (whoami) */
+#whoami{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:6px 10px;border-radius:999px;
+  background:#0c1322;border:1px solid #172134;
+  color:#d1d5db;font-weight:600;
+}
+#whoami::before{
+  content:"";
+  width:8px;height:8px;border-radius:50%;
+  background:var(--ok);box-shadow:0 0 0 2px rgba(16,185,129,.2);
+}
+
+/* ----- Tables ----- */
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:12px 10px;text-align:left;border-bottom:1px solid var(--border)}
+.table thead th{
+  font-size:13px;font-weight:700;letter-spacing:.4px;color:#cbd5e1;
+  text-transform:uppercase;
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+}
+.table tbody tr:hover{background:rgba(249,115,22,.06)}
+.table tbody tr td:first-child{
+  font-feature-settings:"tnum" 1,"lnum" 1;
+  font-weight:600;color:#f8fafc;
+}
+
+/* ----- Badges (used by JS: ok | warn | meh) ----- */
+.badge{
+  display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;
+  border:1px solid var(--border);
+}
+.badge.ok  {background:#062e23;color:#a7f3d0;border-color:#064e3b}
+.badge.warn{background:#2b1a03;color:#fde68a;border-color:#713f12}
+.badge.meh {background:#1f2937;color:#e5e7eb}
+
+/* Optional status-specific rows if you later add classes */
+tr.status-completed td{color:#c7f9e9}
+tr.status-open:hover td{background:rgba(249,115,22,.05)}
+
+/* ----- Utilities ----- */
+.hidden{display:none}
+.center{display:grid;place-items:center}
+.p-0{padding:0}.p-1{padding:4px}.p-2{padding:8px}.p-3{padding:12px}
+.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}
+
+/* =========================================================
+   LOGIN POLISH (scoped to .login so other pages won't care)
+   ========================================================= */
+.login{
+  max-width:540px;
+  padding:28px;
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(17,24,39,.92), rgba(17,24,39,.86));
+  border:1px solid var(--border);
+  box-shadow:0 20px 56px rgba(0,0,0,.45);
+}
+.login h1{
+  margin:0 0 6px;
+  font-size:clamp(1.6rem,2.4vw,2rem);
+  letter-spacing:.2px;
+}
+.login .muted{color:var(--muted);}
+
+/* vertical rhythm so it stops feeling cramped */
+#loginForm{
+  display:grid;
+  gap:18px;
+  margin-top:8px;
+}
+
+/* labels smaller and tighter to fields */
+#loginForm > label{
+  margin-bottom:-6px;
+  font-size:.94rem;
+  color:var(--muted);
+}
+
+/* comfy inputs */
+#loginForm input[type="email"],
+#loginForm input[type="password"],
+#loginForm input[type="text"]{
+  height:48px;
+  width:100%;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(11,16,32,.78);
+  color:var(--text);
+  padding:10px 14px;
+  outline:none;
+  transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+/* Focus ring tuned to orange */
+#loginForm input:focus{
+  border-color:var(--orange);
+  box-shadow:0 0 0 3px rgba(249,115,22,.22);
+  background:rgba(11,16,32,.92);
+}
+
+/* Make room for the Show/Hide pill */
+#password{ padding-right:84px; }
+
+/* Show/Hide pill override so it visually matches */
+#togglePw{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  height:34px; padding:0 12px;
+  border:1px solid var(--border) !important;
+  border-radius:10px !important;
+  background:rgba(255,255,255,.06) !important;
+  color:var(--text) !important;
+  font-weight:600; font-size:.9rem;
+  cursor:pointer;
+}
+#togglePw:hover{ background:rgba(255,255,255,.09) !important; }
+
+/* helper text */
+#pwHelp{ margin:-6px 2px 0; font-size:.86rem; }
+
+/* full-width primary button with same vibe as rest */
+#btnLogin{
+  height:48px; width:100%;
+  border:0; border-radius:12px;
+  font-weight:800; letter-spacing:.2px;
+  background:linear-gradient(180deg, #ffb762 0%, #ff8a28 100%);
+  color:#0b1020;
+  box-shadow:0 8px 20px rgba(255,138,40,.25);
+  cursor:pointer;
+  transition:transform .08s ease, box-shadow .15s ease, filter .15s ease;
+}
+#btnLogin:hover{ transform:translateY(-1px); box-shadow:0 12px 24px rgba(255,138,40,.28); }
+#btnLogin:active{ transform:translateY(0); filter:brightness(.98); }
+#btnLogin[disabled]{ opacity:.7; cursor:not-allowed; }
+
+/* Forgot password sits with breathing room */
+.login .link{
+  display:inline-block;
+  margin-top:10px;
+  color:var(--muted);
+  text-decoration:none;
+  font-size:.95rem;
+}
+.login .link:hover{ text-decoration:underline; }
+
+/* Error box inside login card */
+.login .error{
+  margin-top:4px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(239,68,68,.1);
+  border:1px solid rgba(239,68,68,.35);
+  color:#fecaca;
+}
+
+/* small screens still comfy */
+@media (max-width:420px){
+  .login{ padding:22px; }
+  #loginForm{ gap:16px; }
+}
+/* ===== Dashboard table contrast + layout fixes ===== */
+
+/* Kill Bootstrap’s white rows and force dark contrast */
+.panel .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--text);
+  background: transparent;
+}
+.panel .table thead th {
+  color: var(--muted);
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+}
+.panel .table tbody tr {
+  background: rgba(255,255,255,.02);
+}
+.panel .table tbody tr:hover {
+  background: rgba(249,115,22,.06);
+}
+.panel .table td,
+.panel .table th {
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border);
+}
+.panel .table tbody tr td:first-child {
+  color: #f8fafc !important;
+  font-weight: 700;
+}
+
+/* Jobs-page style helpers so the dashboard list stops looking shy */
+.id-cell{font-weight:800}
+.sub{display:block;font-size:.8rem;color:var(--muted);margin-top:4px}
+.icon-pill{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,.12);margin-right:10px}
+.icon-wrench{width:14px;height:14px;display:block}
+.td-notes{max-width:360px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.td-person{white-space:nowrap}
+.td-person .phone{display:block;font-size:.8rem;color:var(--muted)}
+/* ===== Navbar color polish (PomenPro Admin) ===== */
+#navbar .navbar {
+  background: linear-gradient(180deg, #101828, #0b1220); /* dark navy gradient */
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,.45);
+  padding: 0.75rem 1rem;
+  transition: background .3s ease;
+}
+
+/* Brand and links */
+#navbar .navbar-brand,
+#navbar .navbar-brand span {
+  color: #f8fafc !important;
+  font-weight: 700;
+}
+#navbar .navbar-nav .nav-link {
+  color: rgba(229,231,235,.9) !important;
+  font-weight: 600;
+  padding-bottom: .35rem;
+  transition: color .2s ease;
+}
+#navbar .navbar-nav .nav-link:hover {
+  color: var(--orange-3) !important;
+}
+#navbar .navbar-nav .nav-link.active {
+  color: #fff !important;
+  border-bottom: 2px solid var(--orange);
+}
+
+/* User pill & button */
+#navbar .user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  color: var(--text);
+  font-weight: 600;
+  backdrop-filter: blur(6px);
+}
+#navbar .user-pill .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 2px rgba(16,185,129,.2);
+}
+
+/* Sign-out button */
+#navbar .btn-orange {
+  background: linear-gradient(180deg, var(--orange-3), var(--orange));
+  color: #111;
+  border-radius: 10px;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(249,115,22,.25), inset 0 0 0 1px rgba(0,0,0,.15);
+  transition: transform .1s ease, filter .2s ease;
+}
+#navbar .btn-orange:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* Navbar collapses nicely on small screens */
+@media (max-width: 991.98px) {
+  #navbar .navbar-collapse {
+    background: rgba(10,16,32,.95);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .75rem;
+  }
+}
+

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PomenPro Admin · Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="preload" href="assets/styles.css" as="style">
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="wrap">
+  <noscript>
+    <div class="card" role="alert" style="margin:16px;max-width:420px">
+      JavaScript is disabled. Adorable. The login isn’t.
+    </div>
+  </noscript>
+
+  <main class="card login" role="main" aria-labelledby="title">
+    <h1 id="title">PomenPro Admin</h1>
+    <p class="muted" id="subtitle">Sign in to your dashboard</p>
+
+    <form id="loginForm" aria-describedby="subtitle" novalidate>
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        inputmode="email"
+        autocomplete="username"
+        placeholder="admin@pomen.pro"
+        required
+        spellcheck="false"
+      />
+
+      <label for="password">Password</label>
+      <div class="pw-wrap" style="position:relative">
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="••••••••"
+          required
+          minlength="6"
+          aria-describedby="pwHelp"
+        />
+        <button type="button" id="togglePw" aria-label="Show password">Show</button>
+      </div>
+      <p id="pwHelp" class="muted">Minimum 6 characters.</p>
+
+      <button type="submit" id="btnLogin">Login</button>
+
+      <p id="errorBox" class="error" hidden role="alert"></p>
+    </form>
+
+    <a href="reset.html" class="link">Forgot password?</a>
+  </main>
+
+  <!-- Your auth logic -->
+  <script type="module" src="js/app.js"></script>
+
+  <!-- Tiny progressive enhancements that don't fight your app.js -->
+  <script>
+    // Password show/hide
+    const pw = document.getElementById('password');
+    const t = document.getElementById('togglePw');
+    if (pw && t) {
+      t.addEventListener('click', () => {
+        const showing = pw.type === 'text';
+        pw.type = showing ? 'password' : 'text';
+        t.textContent = showing ? 'Show' : 'Hide';
+        t.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+        pw.focus();
+      });
+    }
+
+    // Button UX during submit; app.js should re-enable on error
+    const form = document.getElementById('loginForm');
+    form?.addEventListener('submit', () => {
+      const btn = document.getElementById('btnLogin');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Signing in...';
+        setTimeout(() => {
+          if (btn.disabled) {
+            btn.disabled = false;
+            btn.textContent = 'Login';
+          }
+        }, 6000);
+      }
+    });
+  </script>
+</body>
+</html>

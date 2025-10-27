@@ -1,0 +1,263 @@
+/* ===========================
+   PomenPro • Jobs page styles
+   Dark navy + black + orange (splash-match)
+   No HTML changes needed.
+   =========================== */
+
+/* ---------- Brand tokens ---------- */
+:root{
+  --pp-bg:#0b1220;         /* deep navy */
+  --pp-bg-2:#0f172a;       /* slate navy */
+  --pp-black:#07090e;      /* near-black */
+  --pp-orange:#f97316;     /* primary accent */
+  --pp-orange-2:#b45309;   /* darker orange */
+  --pp-orange-3:#fb923c;   /* lighter orange */
+
+  --pp-card:#0f1624;
+  --pp-soft:#0d1422;
+  --pp-soft-2:#121A2B;
+  --pp-border:#232b3a;
+  --pp-text:#e5e7eb;
+  --pp-muted:#94a3b8;
+
+  --pp-card-radius:16px;
+  --pp-shadow: 0 14px 40px rgba(0,0,0,.35);
+  --pp-shadow-hover: 0 18px 50px rgba(0,0,0,.45);
+  --pp-ring:0 0 0 3px rgba(249,115,22,.28);
+}
+
+/* ---------- Background (splash-like) ---------- */
+html,body{height:100%}
+body{
+  color: var(--pp-text);
+  background: var(--pp-bg);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Diagonal navy band (top-left) */
+body::before{
+  content:"";
+  position:fixed; inset:-20vmax 0 0 -20vmax;
+  width:140vmax; height:60vmax;
+  transform: rotate(-35deg);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.03) 100%),
+    linear-gradient(180deg, #1b2434 0%, #0e1628 100%);
+  z-index:-2;
+  filter: saturate(.9);
+}
+
+/* Orange corner (bottom-right) */
+body::after{
+  content:"";
+  position:fixed; right:-25vmax; bottom:-25vmax; width:70vmax; height:70vmax;
+  transform: rotate(-45deg);
+  background:
+    linear-gradient(135deg, rgba(0,0,0,.18), rgba(0,0,0,0)) 0/100% 100%,
+    linear-gradient(135deg, var(--pp-orange) 0%, var(--pp-orange-2) 100%);
+  border-radius:16px;
+  z-index:-2;
+  filter: saturate(.95);
+}
+
+/* Subtle vignette so content pops */
+main.container{ position:relative }
+main.container::before{
+  content:"";
+  position:absolute; inset:-24px;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(255,255,255,.06), transparent 60%),
+    radial-gradient(1000px 700px at 110% 0%, rgba(255,255,255,.04), transparent 60%);
+  pointer-events:none;
+  z-index:-1;
+}
+
+/* ---------- Navbar (match dashboard pic) ---------- */
+#navbar-container .navbar{
+  position: relative;      /* keep underline fragments inside */
+  z-index: 5;              /* sit above background bands */
+  background: linear-gradient(180deg, #121a26, #0d1422) !important;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
+#navbar-container .navbar-brand{
+  color:#fff !important; font-weight:700
+}
+
+/* Default link + hover */
+#navbar-container .nav-link{
+  color:#cbd5e1 !important;
+  position: relative;               /* anchor underline to the link only */
+  display: inline-block;            /* no full-row underlines */
+  transition: color .15s ease;
+}
+#navbar-container .nav-link:hover{
+  color:#ffffff !important
+}
+
+/* Active link underline ONLY for the active item */
+#navbar-container .nav-link::after{
+  content:""; position:absolute; left:8px; right:8px; bottom:-6px; height:3px;
+  background: transparent; border-radius:2px; opacity:0; pointer-events:none;
+}
+#navbar-container .nav-link.active{
+  color:#ffffff !important; font-weight:600;
+}
+#navbar-container .nav-link.active::after{
+  background: linear-gradient(90deg, var(--pp-orange), var(--pp-orange-3));
+  opacity:.95;
+}
+
+/* Username pill and sign-out button (scoped so we don't wreck other buttons) */
+#navbar-container .user-pill{
+  display:inline-flex; align-items:center; gap:.4rem;
+  padding:.35rem .8rem;
+  background:#0b1526; color:#e2e8f0;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:999px; font-weight:600; font-size:.9rem;
+  box-shadow:inset 0 0 6px rgba(0,0,0,.4);
+}
+#navbar-container .user-pill .dot{
+  width:8px; height:8px; border-radius:50%;
+  background:#10b981; box-shadow:0 0 6px #10b981;
+}
+
+/* Only style the actual sign-out button by id or data attr */
+#navbar-container #signOutBtn,
+#navbar-container [data-signout]{
+  background:linear-gradient(180deg, var(--pp-orange-3), var(--pp-orange));
+  color:#0f0f0f; font-weight:600;
+  border:none; border-radius:12px;
+  padding:.45rem 1rem;
+  box-shadow:0 4px 12px rgba(249,115,22,.3);
+  transition:filter .15s ease, transform .15s ease;
+}
+#navbar-container #signOutBtn:hover,
+#navbar-container [data-signout]:hover{
+  filter:brightness(1.05); transform:translateY(-1px);
+}
+#navbar-container #signOutBtn:active,
+#navbar-container [data-signout]:active{
+  filter:brightness(.95); transform:translateY(1px);
+}
+
+/* ---------- Header controls ---------- */
+.container .form-select.form-select-sm,
+.container .form-control.form-control-sm{
+  color:var(--pp-text);
+  background-color:#0d1422;
+  border:1px solid var(--pp-border);
+  border-radius:12px;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+.container .form-select.form-select-sm::placeholder,
+.container .form-control.form-control-sm::placeholder{ color:#8892a6 }
+.container .form-select.form-select-sm:focus,
+.container .form-control.form-control-sm:focus{
+  outline:none; border-color: var(--pp-orange-3);
+  box-shadow: var(--pp-ring);
+}
+
+/* ---------- Card ---------- */
+.card{
+  background: linear-gradient(180deg, var(--pp-card), var(--pp-soft-2));
+  border:1px solid var(--pp-border) !important;
+  border-radius: var(--pp-card-radius);
+  box-shadow: var(--pp-shadow);
+  overflow:hidden;
+  transition: box-shadow .18s ease, transform .18s ease;
+}
+.card:hover{ box-shadow: var(--pp-shadow-hover) }
+.card-footer{
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(249,115,22,.08) 100%);
+  border-top: 1px solid var(--pp-border);
+  color: var(--pp-muted);
+}
+
+/* ---------- Table (dark) ---------- */
+.table{
+  margin:0; color:var(--pp-text); vertical-align:middle;
+}
+.table thead th{
+  position:sticky; top:0; z-index:2;
+  background:#0f1726;
+  border-bottom:1px solid var(--pp-border) !important;
+  color:#dbe3f3; font-weight:700;
+}
+.table tbody tr{
+  --row-bg:#0e1626;
+  background: var(--row-bg);
+  transition: background-color .12s ease, transform .05s ease;
+}
+.table tbody tr:nth-child(even){ --row-bg:#0b1322 }
+.table tbody tr:hover{ background: rgba(249,115,22,.08) !important }
+.table td,.table th{ padding:12px 14px; border-color: var(--pp-border) }
+
+/* First column icon */
+tr.job-row td:first-child{ width:40px; padding-left:16px }
+
+/* ---------- Job icon pill ---------- */
+.job-icon{
+  width:30px; height:30px; border-radius:10px;
+  display:inline-flex; align-items:center; justify-content:center;
+  background: linear-gradient(135deg, rgba(249,115,22,.18), rgba(249,115,22,.10));
+  color: var(--pp-orange);
+  box-shadow: inset 0 0 0 1px rgba(249,115,22,.22);
+}
+.job-icon i{ font-size:16px }
+
+/* ---------- Text helpers ---------- */
+td .muted{ color: var(--pp-muted); font-size:.86rem }
+td .title{ font-weight:700; letter-spacing:.2px }
+
+/* ---------- Status badges ---------- */
+.badge-status{
+  display:inline-block; padding:.38rem .6rem;
+  font-weight:700; letter-spacing:.2px;
+  border-radius:999px; text-transform:capitalize;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.badge-status.pending    { background:rgba(251,146,60,.12); color:#f59e0b }
+.badge-status.assigned   { background:rgba(96,165,250,.12); color:#60a5fa }
+.badge-status.in_progress{ background:rgba(56,189,248,.12); color:#38bdf8 }
+.badge-status.paused     { background:rgba(192,132,252,.12); color:#c084fc }
+.badge-status.completed  { background:rgba(52,211,153,.12); color:#34d399 }
+.badge-status.cancelled  { background:rgba(248,113,113,.12); color:#f87171 }
+
+/* ---------- Notes truncation ---------- */
+#jobsTable td:last-child{
+  max-width:340px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* ---------- Summary text ---------- */
+#summaryText,#lastUpdated{ color: var(--pp-muted) }
+
+/* ---------- Compact modes ---------- */
+@media (max-width: 991.98px){
+  .table td,.table th{ padding:10px 12px }
+  #jobsTable td:nth-child(6), /* Vehicle No */
+  #jobsTable th:nth-child(6){ display:none }
+  #jobsTable td:last-child{ max-width:220px }
+}
+@media (max-width: 575.98px){
+  .container .d-flex.align-items-center.justify-content-between{
+    gap:.75rem; flex-direction:column; align-items:stretch !important;
+  }
+  .container .d-flex.gap-2{ gap:.5rem !important }
+  #jobsTable td:nth-child(7),
+  #jobsTable th:nth-child(7){ display:none } /* hide Created on phones */
+  #jobsTable td:last-child{ max-width:160px }
+}
+
+/* ---------- Focus-visible ---------- */
+a:focus-visible, button:focus-visible,
+.form-control:focus-visible, .form-select:focus-visible{
+  outline:none; box-shadow: var(--pp-ring); border-color: var(--pp-orange-3);
+}
+
+/* ---------- Header divider ---------- */
+.container .mb-3{
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding-bottom:.75rem; margin-bottom:1rem !important;
+}
