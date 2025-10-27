@@ -150,7 +150,7 @@ document.getElementById("btnSignOut")?.addEventListener("click", async ()=>{
   try{
     await signOut(getAuth());
     toast("Signed out");
-    setTimeout(()=>location.href="login.html", 500);
+    setTimeout(()=>location.href="index.html", 500);
   }catch(e){
     toast("Sign out failed");
   }
