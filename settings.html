@@ -5,21 +5,45 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>PomenPro • Settings</title>
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="settings.css"/>
-
-  <!-- Bootstrap (only if your navbar uses it) -->
+  <!-- Bootstrap first so our CSS can override it -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Firebase initializer (must come before settings.js) -->
-  <script type="module" src="js/firebase.js"></script>
-
-  <!-- Page logic -->
-  <script type="module" src="settings.js"></script>
+  <!-- Page styles -->
+  <link rel="stylesheet" href="settings.css"/>
+  <meta name="theme-color" content="#0e1521">
 </head>
-<body>
-  <!-- Navbar container (loaded from assets/navbar.html) -->
-  <div id="navbar-slot"></div>
+<body data-page="settings">
+  <!-- ===== NAVBAR (redesigned) ===== -->
+  <nav class="navbar navbar-expand-lg px-3 shadow-sm">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="dashboard.html">
+      <img src="assets/logo.png" alt="Logo" width="32" height="32" class="me-2">
+      <span>PomenPro Admin</span>
+    </a>
+
+    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="jobs.html">Jobs</a></li>
+        <li class="nav-item"><a class="nav-link" href="technicians.html">Technicians</a></li>
+        <li class="nav-item"><a class="nav-link" href="performance.html">Performance</a></li>
+        <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+        <li class="nav-item"><a class="nav-link" href="settings.html">Settings</a></li>
+      </ul>
+
+      <div class="d-flex align-items-center gap-3">
+        <div id="userPill" class="user-pill">
+          <span class="dot"></span>
+          <span id="userName">admin</span>
+        </div>
+        <button id="signOutBtn" class="btn btn-orange btn-sm">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+  <!-- ===== /NAVBAR ===== -->
 
   <main class="wrap">
     <header class="page-head">
@@ -30,93 +54,92 @@
       <div class="version-chip"><span id="buildVersion">v1.0.0</span></div>
     </header>
 
-    <section class="grid">
-      <!-- Main: Admin Details -->
-      <div class="col-main">
-        <article class="card">
-          <div class="profile-head">
-            <div id="avatar" class="avatar" aria-hidden="true">A</div>
-            <div class="pinfo">
-              <h2 id="displayName" class="name">—</h2>
-              <p class="email" id="email">—</p>
-              <div class="tags">
-                <span class="tag" id="roleTag">Role: —</span>
-                <span class="tag" id="statusTag">Status: —</span>
-              </div>
+    <!-- ===== New unified layout ===== -->
+    <section class="settings-grid">
+      <!-- Profile card full width -->
+      <article class="card profile-card">
+        <div class="profile-head">
+          <div id="avatar" class="avatar" aria-hidden="true">A</div>
+          <div class="pinfo">
+            <h2 id="displayName" class="name">—</h2>
+            <p class="email" id="email">—</p>
+            <div class="tags">
+              <span class="tag" id="roleTag">Role: —</span>
+              <span class="tag" id="statusTag">Status: —</span>
             </div>
           </div>
-
-          <dl class="kv">
-            <dt>UID</dt><dd><span id="uid">—</span> <button class="chip" id="copyUid">Copy</button></dd>
-            <dt>Phone</dt><dd id="phone">—</dd>
-            <dt>Provider</dt><dd id="provider">—</dd>
-            <dt>Created</dt><dd id="created">—</dd>
-            <dt>Last sign-in</dt><dd id="lastSignIn">—</dd>
-            <dt>Last active</dt><dd id="lastActive">—</dd>
-          </dl>
-
-          <div class="btn-row">
-            <button class="btn" id="copyEmail">Copy email</button>
-            <button class="btn danger" id="btnSignOut">Sign out</button>
-          </div>
-        </article>
-      </div>
-
-      <!-- Sidebar: System Info -->
-      <aside class="col-side">
-        <div class="side-stack">
-          <section class="card sticky">
-            <h3>App Version</h3>
-            <dl class="kv narrow">
-              <dt>Channel</dt><dd id="buildChannel">Production</dd>
-              <dt>Last updated</dt><dd id="lastUpdated">—</dd>
-            </dl>
-            <div class="btn-row">
-              <button class="btn ghost" id="btnCheckUpdates">Check for updates</button>
-            </div>
-          </section>
-
-          <section class="card">
-            <h3>Environment</h3>
-            <dl class="kv narrow">
-              <dt>Project ID</dt><dd id="projId">—</dd>
-              <dt>RTDB URL</dt><dd id="dbUrl">—</dd>
-              <dt>Auth Domain</dt><dd id="authDomain">—</dd>
-              <dt>Storage</dt><dd id="bucket">—</dd>
-              <dt>Hosting</dt><dd id="hosting">—</dd>
-            </dl>
-          </section>
-
-          <section class="card">
-            <h3>Device</h3>
-            <dl class="kv narrow">
-              <dt>Browser</dt><dd id="browserInfo">—</dd>
-              <dt>Screen</dt><dd id="screenInfo">—</dd>
-              <dt>User Agent</dt><dd id="ua">—</dd>
-              <dt>Signed in as</dt><dd id="currentUser">—</dd>
-            </dl>
-          </section>
-
-          <section class="card">
-            <h3>Credits & Contact</h3>
-            <ul class="list">
-              <li>Firebase (Auth, RTDB, Storage)</li>
-              <li>Bootstrap 5</li>
-              <li>Chart.js</li>
-            </ul>
-            <dl class="kv narrow">
-              <dt>Email</dt><dd><a href="mailto:support@pomenpro.my">support@pomenpro.my</a></dd>
-            </dl>
-            <div class="btn-row">
-              <a href="dashboard.html" class="btn ghost">Back to dashboard</a>
-            </div>
-          </section>
         </div>
-      </aside>
+
+        <dl class="kv">
+          <dt>UID</dt><dd><span id="uid">—</span> <button class="chip" id="copyUid" type="button">Copy</button></dd>
+          <dt>Phone</dt><dd id="phone">—</dd>
+          <dt>Provider</dt><dd id="provider">—</dd>
+          <dt>Created</dt><dd id="created">—</dd>
+          <dt>Last sign-in</dt><dd id="lastSignIn">—</dd>
+          <dt>Last active</dt><dd id="lastActive">—</dd>
+        </dl>
+
+        <div class="btn-row">
+          <button class="btn" id="copyEmail" type="button">Copy email</button>
+          <button class="btn danger" id="btnSignOut" type="button">Sign out</button>
+        </div>
+      </article>
+
+      <!-- Info cards in two-column grid -->
+      <div class="info-grid">
+        <section class="card">
+          <h3>App Version</h3>
+          <dl class="kv narrow">
+            <dt>Channel</dt><dd id="buildChannel">Production</dd>
+            <dt>Last updated</dt><dd id="lastUpdated">—</dd>
+          </dl>
+          <div class="btn-row">
+            <button class="btn ghost" id="btnCheckUpdates" type="button">Check for updates</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Environment</h3>
+          <dl class="kv narrow">
+            <dt>Project ID</dt><dd id="projId">—</dd>
+            <dt>RTDB URL</dt><dd id="dbUrl">—</dd>
+            <dt>Auth Domain</dt><dd id="authDomain">—</dd>
+            <dt>Storage</dt><dd id="bucket">—</dd>
+            <dt>Hosting</dt><dd id="hosting">—</dd>
+          </dl>
+        </section>
+
+        <section class="card">
+          <h3>Device</h3>
+          <dl class="kv narrow">
+            <dt>Browser</dt><dd id="browserInfo">—</dd>
+            <dt>Screen</dt><dd id="screenInfo">—</dd>
+            <dt>User Agent</dt><dd id="ua">—</dd>
+            <dt>Signed in as</dt><dd id="currentUser">—</dd>
+          </dl>
+        </section>
+
+        <section class="card">
+          <h3>Contact</h3>
+          <dl class="kv narrow">
+            <dt>Email</dt><dd><a href="mailto:support@pomenpro.my">support@pomenpro.my</a></dd>
+          </dl>
+          <div class="btn-row">
+            <a href="dashboard.html" class="btn ghost">Back to dashboard</a>
+          </div>
+        </section>
+      </div>
     </section>
+    <!-- ===== /New layout ===== -->
   </main>
 
-  <!-- Bootstrap JS (optional) -->
+  <!-- Firebase initializer -->
+  <script type="module" src="js/firebase.js"></script>
+
+  <!-- Page logic -->
+  <script type="module" src="settings.js"></script>
+
+  <!-- Bootstrap JS -->
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

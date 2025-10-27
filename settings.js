@@ -25,6 +25,20 @@ const BUILD_CHANNEL = "Production"; // Development | Staging | Production
       if(href.toLowerCase().includes("settings")) a.classList.add("active");
       else a.classList.remove("active");
     }
+
+    // Sign-out button wiring (navbar)
+    const signBtn = slot.querySelector("#signOutBtn");
+    if (signBtn) {
+      signBtn.addEventListener("click", async () => {
+        try {
+          await signOut(getAuth());
+          toast("Signed out");
+          setTimeout(()=>location.href="login.html", 500);
+        } catch(e) {
+          toast("Sign out failed");
+        }
+      });
+    }
   }catch(e){ console.warn("Navbar load failed:", e); }
 })();
 
@@ -58,9 +72,12 @@ const auth = getAuth();
 onAuthStateChanged(auth, async (user) => {
   setText("currentUser", user?.email || "Not signed in");
 
+  const nameEl = document.getElementById("userName");
+
   if(!user){
     renderAvatar(null);
     setText("displayName", "Not signed in");
+    if (nameEl) nameEl.textContent = "Admin";
     setText("email", "—");
     setText("uid", "—");
     setText("provider", "—");
@@ -77,7 +94,9 @@ onAuthStateChanged(auth, async (user) => {
 
   // Auth basics
   renderAvatar(user);
-  setText("displayName", user.displayName || maskEmailName(user.email) || "Admin");
+  const displayName = user.displayName || maskEmailName(user.email) || "Admin";
+  setText("displayName", displayName);
+  if (nameEl) nameEl.textContent = displayName; // ← update navbar name only
   setText("email", user.email || "—");
   setText("uid", user.uid);
   const provider = user.providerData?.[0]?.providerId || "password";
@@ -85,8 +104,6 @@ onAuthStateChanged(auth, async (user) => {
 
   setText("created", fmtDate(user.metadata?.creationTime));
   setText("lastSignIn", fmtDate(user.metadata?.lastSignInTime));
-
-  // Default lastActive = lastSignIn; RTDB may override with /users/{uid}/lastSeen
   setText("lastActive", relTime(user.metadata?.lastSignInTime));
 
   // RTDB: /users/{uid}
@@ -102,14 +119,12 @@ onAuthStateChanged(auth, async (user) => {
         setText("lastActive", relTime(u.lastSeen));
       }
     }else{
-      // No user node; show sane defaults
       setText("roleTag", "Role: admin");
       setText("statusTag", "Status: active");
       setText("phone", "—");
     }
   }catch(e){
     console.warn("Failed to read /users/{uid}:", e);
-    // Graceful fallbacks already set
     setText("roleTag", "Role: admin");
     setText("statusTag", "Status: active");
     if(!document.getElementById("phone").textContent.trim()) setText("phone", "—");
@@ -212,7 +227,6 @@ function toast(msg){
 }
 function getBrowserShort(){
   const ua = navigator.userAgent || "";
-  // Very rough, just for display
   if(ua.includes("Edg/")) return "Edge";
   if(ua.includes("Chrome/")) return "Chrome";
   if(ua.includes("Firefox/")) return "Firefox";
